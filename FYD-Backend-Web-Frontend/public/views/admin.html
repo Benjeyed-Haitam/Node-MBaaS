@@ -1,0 +1,242 @@
+
+<!-- If Admin are not logged -->
+<div ng-show=" logged=='false' || logged==undefined || admin=='false' " class="jumbotron text-center well black-background spc"> </br>
+    <img class="acessDenied" src="../img/Admin-Denied.jpg"> </br> </br>
+</div>
+
+<!-- Admin is Logged -->
+<div class="jumbotron black-background spc" ng-show=" logged=='true' && admin=='true'">
+    <div class="container text-center gray-background">
+
+    <!-- NO OPTION SELECTED YET -->
+    <div ng-show="option=='none'">
+        <img class="admin-img" src="../img/admin.png"> </br> </br>
+        <button class="btn btn-warning btn-lg" ng-click="option='manageUsers'">User's management</button> &nbsp&nbsp;
+        <button class="btn btn-warning btn-lg" ng-click="getFeedback()">feedback management</button> </br> </br>
+    </div> <br/>
+
+    <!-- FEEDBACK MANAGEMENT -->
+    <div ng-show="option=='manageFeedback'"> 
+        <span class="titre3">Feedback Management</span> </br> </br> </br>
+
+        <button class="btn btn-warning btn-lg" ng-click="feedbackOption='list'">Feedback's list</button> &nbsp&nbsp;
+        <button class="btn btn-warning btn-lg" ng-click="feedbackOption='delete'">Delete Feedback</button> </br> </br>
+
+        <!-- FEEDBACK LIST -->
+        <table ng-show ="feedbackOption=='list'" class="well table table-striped table-hover spacer text-left">
+            <thead>
+            <tr>
+                <th>
+                    <a>Respond</a>
+                </th>
+
+                <th>
+                    <a>Subject</a>
+                </th>
+
+                <th>
+                    <a>Email</a>
+                </th>
+
+                <th>
+                    <a>Type</a>
+                </th>
+
+                <th>
+                    <a>Description</a>
+                </th>
+
+                <th>
+                    <a>Status</a>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr class="clickable" ng-repeat="msg in feedback" ng-click="">
+                <td> <img src="../img/modifyLogo.jpg" class="image"> </td>
+                <td>{{msg.subject}}</td>
+                <td>{{msg.email}}</td>
+                <td>{{msg.type}}</td>
+                <td>{{msg.description}}</td>
+                <td>{{msg.status}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- DELETE FEEDBACK -->
+        <table ng-show ="feedbackOption=='delete'" class="well table table-striped table-hover spacer text-left">
+            <thead>
+            <tr>
+                <th>
+                    <a>Delete</a>
+                </th>
+
+                <th>
+                    <a>Subject</a>
+                </th>
+
+                <th>
+                    <a>Email</a>
+                </th>
+
+                <th>
+                    <a>Type</a>
+                </th>
+
+                <th>
+                    <a>Description</a>
+                </th>
+
+                <th>
+                    <a>Status</a>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr class="clickable" ng-repeat="msg in feedback" ng-click="deleteFeedback(msg._id)">
+                <td> <img src="../img/deleteLogo.jpg" class="image"> </td>
+                <td>{{msg.subject}}</td>
+                <td>{{msg.email}}</td>
+                <td>{{msg.type}}</td>
+                <td>{{msg.description}}</td>
+                <td>{{msg.status}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- USER'S MANAGEMENT -->
+    <div ng-show="option=='manageUsers'">
+        <h1><span class="fa fa-sign-in"></span>User's Management</h1> <br/>
+
+        <button class="btn btn-warning btn-lg" ng-click="userOption='list'">User's list</button> &nbsp&nbsp;
+        <button class="btn btn-warning btn-lg" ng-click="userOption='delete'">Delete User</button> &nbsp&nbsp;
+        <button class="btn btn-warning btn-lg" ng-click="userOption='addAdmin'">Add Admin</button> </br> </br>
+
+     <!-- ****************************************** USER'S LIST *************************************************** -->
+     <div ng-show="userOption=='list'">
+        <h1><span class="fa fa-sign-in"></span>User's List</h1> <br/>
+        <table class="well table table-striped table-hover spacer text-left">
+            <thead>
+            <tr>
+                <th>
+                    <a>Username</a>
+                </th>
+
+                <th>
+                    <a>Email</a>
+                </th>
+
+                <th>
+                    <a>Fullname</a>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr class="clickable" ng-repeat="user in users" ng-if="user.local.admin=='false'">
+                <td>{{user.local.username}}</td>
+                <td>{{user.local.email}}</td>
+                <td>{{user.local.fullname}}</td>
+            </tr>
+            </tbody>
+        </table>
+     </div>
+
+    <!-- ****************************************** ADD USER ******************************************************* -->
+    <form ng-show="userOption=='addAdmin'" name="signupForm" ng-submit="submitForm(signupForm.$valid)" novalidate>
+            <h1><span class="fa fa-sign-in"></span> Add New User</h1> <br/>
+            <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+            <div class="alert alert-info" ng-hide="signupMessage=='' " >
+                {{signupMessage}}
+            </div>
+
+            <!-- USERNAME -->
+            <div class="form-group" ng-class="{ 'has-error' : signupForm.username.$invalid && !signupForm.username.$pristine }">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-control" name="username" ng-model="newUser.username" ng-minlength="3" ng-maxlength="20" required>
+                <p ng-show="signupForm.username.$invalid  && !signupForm.username.$pristine && !signupForm.username.$error.minlength && !signupForm.username.$error.maxlength" class="help-block">Username is required .</p>
+                <p ng-show="signupForm.username.$error.minlength && !signupForm.username.$pristine" class="help-block">Too short to be a valid username.</p>
+                <p ng-show="signupForm.username.$error.maxlength && !signupForm.username.$pristine" class="help-block">Too long to be a valid username.</p>
+            </div>
+
+            <!-- Fullname -->
+            <div class="form-group" ng-class="{ 'has-error' : signupForm.fullname.$invalid && !signupForm.fullname.$pristine }">
+                <label for="fullname">Fullname</label>
+                <input type="text" id="fullname" class="form-control" name="fullname" ng-model="newUser.fullname" ng-minlength="5" ng-maxlength="30" required>
+                <p ng-show="signupForm.fullname.$invalid  && !signupForm.fullname.$pristine && !signupForm.fullname.$error.minlength && !signupForm.fullname.$error.maxlength" class="help-block">Fullname is required .</p>
+                <p ng-show="signupForm.fullname.$error.minlength && !signupForm.fullname.$pristine" class="help-block">Fullname is too short.</p>
+                <p ng-show="signupForm.fullname.$error.maxlength && !signupForm.fullname.$pristine" class="help-block">Fullname too long.</p>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="form-group" ng-class="{ 'has-error' : signupForm.email.$invalid && !signupForm.email.$pristine }">
+                <label for="email">Email</label>
+                <input type="email" id="email" class="form-control" name="email" ng-model="newUser.email" required>
+                <p ng-show="signupForm.email.$invalid  && !signupForm.email.$pristine" class="help-block">This is an invalid email.</p>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="form-group"  ng-class="{ 'has-error' : signupForm.password.$invalid && !signupForm.password.$pristine }">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" name="password" ng-model="newUser.password" ng-minlength="8" ng-maxlength="20" required>
+                <p ng-show="signupForm.password.$invalid  && !signupForm.password.$pristine && !signupForm.password.$error.minlength && !signupForm.password.$error.maxlength" class="help-block">Password is required .</p>
+                <p ng-show="signupForm.password.$error.minlength && !signupForm.password.$pristine" class="help-block">Password too short.</p>
+                <p ng-show="signupForm.password.$error.maxlength && !signupForm.password.$pristine" class="help-block">Password too long.</p>
+            </div>
+
+            <!-- TYPE (Auto) -->
+            <div class="form-group">
+                <label>
+                    <input ng-hide='true' type="text" class="form-control" ng-model="newUser.admin" ng-value="newUser.admin='true'" />
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-warning btn-lg" ng-disabled="signupForm.$invalid" ng-click="signup()">Add Admin</button>
+            <button type="reset" class="btn btn-warning btn-lg" ng-click="SetPristine()" >Reset</button> </br> </br>
+
+        </form> </br>
+
+    <!-- ****************************************** Delete USER ******************************************************* -->
+    <div ng-show="userOption=='delete'">
+            <h1><span class="fa fa-sign-in"></span>User's List</h1> <br/>
+            <table class="well table table-striped table-hover spacer text-left">
+                <thead>
+                <tr>
+                    <th>
+                        <a>Delete</a>
+                    </th>
+
+                    <th>
+                        <a>Username</a>
+                    </th>
+
+                    <th>
+                        <a>Email</a>
+                    </th>
+
+                    <th>
+                        <a>Fullname</a>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr class="clickable" ng-repeat="user in users" ng-if="user.local.admin=='false'" ng-click="deleteUser(user._id)">
+                    <td> <img src="../img/deleteLogo.jpg" class="image"> </td>
+                    <td>{{user.local.username}}</td>
+                    <td>{{user.local.email}}</td>
+                    <td>{{user.local.fullname}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    </div>
+</div>

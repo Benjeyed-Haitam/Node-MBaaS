@@ -1,0 +1,57 @@
+<!-- If User are not logged -->
+<div ng-show=" logged=='false' || logged==undefined " class="jumbotron text-center well black-background spc"> </br>
+    <img src="../img/yellowCard.png"> </br> </br>
+</div>
+
+<!-- User is Logged -->
+<div class="jumbotron black-background spc" ng-show=" logged=='true'">
+    <div class="container gray-background">
+        <img class="photo-profile clickable" src="../img/photoProfile.png" ng-click="">
+        <div class="col-sm-6 col-sm-offset-3">
+
+            <h1><span class="fa fa-sign-in"></span>My Profile</h1> <br/>
+
+            <!-- PROFILE FORM -->
+            <form name="profileForm" ng-submit="submitForm(profileForm.$valid)" novalidate>
+                <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+                <!-- USERNAME -->
+                <div class="form-group">
+                    <label class="alert alert-info" for="username">Username</label> :
+                    <label class="alert alert-info" id="username">{{loggedUser.username}}</label>
+                </div>
+
+                <!-- FULLNAME -->
+                <div class="form-group">
+                    <label class="alert alert-info">Fullname</label> :
+                    <input type='text' ng-if ="modifyFullname" type="text" class="alert alert-info" ng-model="profile.newFullname" />
+                    <label ng-if ="!modifyFullname" class="alert alert-info">{{loggedUser.fullname}}</label> &nbsp&nbsp;
+                    <button ng-hide="modifyFullname" class="btn btn-warning btn-lg" ng-click="modifyFullname=true" >Modify</button>
+                    <button ng-hide="!modifyFullname" class="btn btn-warning btn-lg" ng-click="modifyFullname=false" >Reset</button>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="form-group">
+                    <label class="alert alert-info">Email</label> :
+                    <input type='text' ng-if ="modifyEmail" type="email" class="alert alert-info" ng-model="profile.newEmail" />
+                    <label ng-if ="!modifyEmail" class="alert alert-info">{{loggedUser.email}}</label> &nbsp&nbsp;
+                    <button ng-hide="modifyEmail" class="btn btn-warning btn-lg" ng-click="modifyEmail=true" >Modify</button>
+                    <button ng-hide="!modifyEmail" class="btn btn-warning btn-lg" ng-click="modifyEmail=false" >Reset</button>
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="form-group">
+                    <label class="alert alert-info">Password</label> :
+                    <input type='password' ng-if ="modifyPassword" type="email" class="alert alert-info" ng-model="profile.newPassword" />
+                    <label ng-if ="!modifyPassword" class="alert alert-info" >****************</label> &nbsp&nbsp;
+                    <button ng-hide="modifyPassword" class="btn btn-warning btn-lg" ng-click="modifyPassword=true" >Modify</button>
+                    <button ng-hide="!modifyPassword" class="btn btn-warning btn-lg" ng-click="modifyPassword=false" >Reset</button>
+                </div>
+
+                <button type="submit" class="btn btn-warning btn-lg" ng-click="updateProfile()">Submit</button> &nbsp&nbsp;
+                <button type="reset" class="btn btn-warning btn-lg" ng-click="reset()">Reset</button> </br> </br> </br>
+
+            </form>
+        </div>
+    </div>
+</div>

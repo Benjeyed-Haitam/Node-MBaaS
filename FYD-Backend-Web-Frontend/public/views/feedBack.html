@@ -1,0 +1,127 @@
+
+  <!-- If User are not logged -->
+  <div ng-show=" logged=='false' || logged==undefined " class="jumbotron text-center well black-background spc"> </br>
+        <img src="../img/redCard.jpg"> </br> </br>
+  </div>
+
+  <!-- User is Logged -->
+  <div ng-show=" logged=='true'" class="jumbotron black-background spc">
+
+    <div class="container text-center gray-background">
+
+        <!-- SELECT OPTION -->
+        <div ng-show="fbOption=='none'"> </br> </br>
+            <button class="btn btn-warning btn-lg" ng-click="fbOption='Add-FB'">New Feedback</button> &nbsp;&nbsp;&nbsp;
+            <button class="btn btn-warning btn-lg" ng-click="getFeedback()">My Feedback</button> </br> </br>
+            <img src="../img/feedback-img.png">
+        </div>
+
+        <!-- MY FEEDBACK LIST -->
+        <div ng-show="fbOption=='List-FB'"> </br> </br>
+            <table class="well table table-striped table-hover spacer text-left">
+                <thead>
+                <tr>
+                    <th>
+                        <a>Subject</a>
+                    </th>
+
+                    <th>
+                        <a>Email</a>
+                    </th>
+
+                    <th>
+                        <a>Type</a>
+                    </th>
+
+                    <th>
+                        <a>Description</a>
+                    </th>
+
+                    <th>
+                        <a>Status</a>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr class="clickable" ng-repeat="msg in myFeedback">
+                    <td>{{msg.subject}}</td>
+                    <td>{{msg.email}}</td>
+                    <td>{{msg.type}}</td>
+                    <td>{{msg.description}}</td>
+                    <td>{{msg.status}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ADD NEW FEEDBACK -->
+        <div ng-show="fbOption=='Add-FB'" class="col-sm-6 col-sm-offset-3">
+
+            <h1><span class="fa fa-sign-in"></span>Feedback</h1> <br/>
+
+            <!-- LOGIN FORM -->
+            <form name="feedbackForm" ng-submit="submitForm(feedbackForm.$valid)" novalidate>
+                <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+                <!-- SUBJECT -->
+                <div class="form-group" ng-class="{ 'has-error' : feedbackForm.subject.$invalid && !feedbackForm.subject.$pristine }">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" class="form-control" name="subject" ng-model="feedback.subject" ng-minlength="3" ng-maxlength="20" required>
+                    <p ng-show="feedbackForm.subject.$invalid  && !feedbackForm.subject.$pristine && !feedbackForm.subject.$error.minlength && !feedbackForm.subject.$error.maxlength" class="help-block">subject is required to login.</p>
+                    <p ng-show="feedbackForm.subject.$error.minlength && !feedbackForm.subject.$pristine" class="help-block">Too short to be a valid subject.</p>
+                    <p ng-show="feedbackForm.subject.$error.maxlength && !feedbackForm.subject.$pristine" class="help-block">Too long to be a valid subject.</p>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="form-group" ng-class="{ 'has-error' : feedbackForm.email.$invalid && !feedbackForm.email.$pristine }">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" name="email" ng-model="feedback.email" required>
+                    <p ng-show="feedbackForm.email.$invalid  && !feedbackForm.email.$pristine" class="help-block">This is an invalid email.</p>
+                </div>
+
+                <!-- FEEDBACK TYPE -->
+                <div class="form-group" ng-class="{ 'has-error' : feedbackForm.type.$invalid && !feedbackForm.type.$pristine }">
+                    <label>Feedback type</label>
+                    <select class="form-control" name="type" ng-model="feedback.type" required>
+                        <option value="suggestion">Suggestion</option>
+                        <option value="remark">Remark</option>
+                        <option value="report problem">Report a problem</option>
+                    </select>
+                    <p ng-show="feedbackForm.type.$invalid  && !feedbackForm.type.$pristine" class="help-block">Please select type of feedback.</p>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="form-group"  ng-class="{ 'has-error' : feedbackForm.description.$invalid && !feedbackForm.description.$pristine }">
+                <label for="description" > Description </label>
+                <textarea class="form-control" id="description" name="description" ng-model="feedback.description" placeholder="Thank you for your feedback." ng-minlength="20" ng-maxlength="1000" required></textarea>
+                    <p ng-show="feedbackForm.description.$invalid  && !feedbackForm.description.$pristine && !feedbackForm.description.$error.minlength && !feedbackForm.description.$error.maxlength" class="help-block">Please enter a valid description.</p>
+                    <p ng-show="feedbackForm.description.$error.minlength && !feedbackForm.description.$pristine" class="help-block">This description is too short.</p>
+                    <p ng-show="feedbackForm.description.$error.maxlength && !feedbackForm.description.$pristine" class="help-block">This description is too long.</p>
+                </div>
+
+                <!-- USERNAME (Auto) -->
+                <div class="form-group">
+                    <label>
+                        <input ng-hide="true" type="text" class="form-control" ng-model="feedback.username" ng-value="feedback.username=username" />
+                    </label>
+                </div>
+
+                <!-- STATUS (Auto) -->
+                <div class="form-group">
+                    <label>
+                        <input ng-hide="true" type="text" class="form-control" ng-model="feedback.status" ng-value="feedback.status='New Feedback'" />
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-warning btn-lg" ng-disabled="feedbackForm.$invalid" ng-click="createFeedback()">Submit</button>
+                <button type="reset" class="btn btn-warning btn-lg" ng-click="SetPristine()" >Reset</button> </br> </br>
+
+            </form> </br>
+        </div>
+    </div>
+    <div ng-show="fbOption=='New-FB'">
+        <img class="feedback-img" src="../img/feedback.png">
+        <p class="alert alert-info"> We will send a respond as soon as possible to this email : {{feedback.email}}</p> </br>
+    </div>
+</div>
